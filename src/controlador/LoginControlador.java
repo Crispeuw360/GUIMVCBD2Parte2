@@ -22,6 +22,12 @@ public class LoginControlador {
 	public Map<String, Usuario> consultaUsuarios() {
 		return dao.consultaUsuarios();
 	}
+	public boolean insertarUsuario(Usuario usuario) {
+		return dao.insertarUsuario(usuario);
+	}
+	public boolean actualizarUsuario(Usuario usuario) {
+		return dao.actualizarUsuario(usuario);
+	}
 
 
 }

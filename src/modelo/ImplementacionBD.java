@@ -11,6 +11,9 @@ import java.util.TreeMap;
 
 
 
+
+
+
 public class ImplementacionBD implements UsuarioDAO{
 	// Atributos
 		private Connection con;
@@ -29,6 +32,9 @@ public class ImplementacionBD implements UsuarioDAO{
 		final String sql = "SELECT * FROM usuario WHERE usuario = ? AND contrasena = ?";
 		final String sqlInsert = "INSERT INTO usuario VALUES ( ?,?)";
 		final String SQLCONSULTA = "SELECT * FROM USUARIO";
+		final String sql1 = "SELECT * FROM usuario WHERE usuario = ?";
+		final String SQLBORRAR = "DELETE FROM usuario WHERE usuario=?";
+		final String SQLMODIFICAR = "UPDATE usuario SET contrasena=? WHERE usuario=?";
 
 		// Para la conexi n utilizamos un fichero de configuaraci n, config que
 		// guardamos en el paquete control:
@@ -82,6 +88,33 @@ public class ImplementacionBD implements UsuarioDAO{
 
 	        return existe;
 	    }
+		public boolean comprobarUsuario1(Usuario usuario){
+			// Abrimos la conexion
+			boolean existe=false;
+			this.openConnection();
+
+			
+			try {
+				stmt = con.prepareStatement(sql1);
+	            stmt.setString(1, usuario.getNombre());
+	            ResultSet resultado = stmt.executeQuery();
+
+	            //Si hay un resultado, el usuario existe
+	            if (resultado.next()) {
+	                existe = true;
+	            }
+
+	            
+	            resultado.close();
+	            stmt.close();
+	            con.close();
+
+	        } catch (SQLException e) {
+	            System.out.println("Error al verificar credenciales: " + e.getMessage());
+	        }
+
+	        return existe;
+	    }
 
 		@Override
 		public Map<String, Usuario> consultaUsuarios() {
@@ -102,7 +135,7 @@ public class ImplementacionBD implements UsuarioDAO{
 				// Leemos de uno en uno
 				while (rs.next()) {
 					usuario = new Usuario();
-					usuario.setNombre(rs.getString("nombre"));
+					usuario.setNombre(rs.getString("usuario"));
 					usuario.setContrasena(rs.getString("contrasena"));
 					equipos.put(usuario.getNombre(), usuario);
 				}
@@ -115,6 +148,81 @@ public class ImplementacionBD implements UsuarioDAO{
 			}
 			return equipos;
 
+		}
+		public boolean insertarUsuario(Usuario usuario) {
+			// TODO Auto-generated method stub
+			boolean ok=false;
+			if (!comprobarUsuario1(usuario))
+			{
+				this.openConnection();
+				try {
+					// Preparamos la sentencia stmt con la conexion y sentencia sql correspondiente
+
+					stmt = con.prepareStatement(sqlInsert);
+					stmt.setString(1, usuario.getNombre());
+					stmt.setString(2, usuario.getContrasena());
+					if (stmt.executeUpdate()>0) {
+						ok=true;
+					}
+					
+		            stmt.close();
+		            con.close();
+				  } catch (SQLException e) {
+		             System.out.println("Error al verificar credenciales: " + e.getMessage());
+		        }
+			}
+				return ok;
+			
+			
+		}
+		public boolean actualizarUsuario(Usuario usuario) {
+			// TODO Auto-generated method stub
+			boolean ok=false;
+			
+				this.openConnection();
+				try {
+					// Preparamos la sentencia stmt con la conexion y sentencia sql correspondiente
+
+					stmt = con.prepareStatement(SQLMODIFICAR);
+					stmt.setString(2, usuario.getNombre());
+					stmt.setString(1, usuario.getContrasena());
+					if (stmt.executeUpdate()>0) {
+						ok=true;
+					}
+					
+		            stmt.close();
+		            con.close();
+				  } catch (SQLException e) {
+		             System.out.println("Error al verificar credenciales: " + e.getMessage());
+		        }
+			
+				return ok;
+			
+			
+		}
+		public boolean borrarUsuario(String usuario) {
+			// TODO Auto-generated method stub
+			boolean ok=false;
+			
+				this.openConnection();
+				try {
+					// Preparamos la sentencia stmt con la conexion y sentencia sql correspondiente
+
+					stmt = con.prepareStatement(SQLBORRAR);
+					stmt.setString(1, usuario);
+					if (stmt.executeUpdate()>0) {
+						ok=true;
+					}
+					
+		            stmt.close();
+		            con.close();
+				  } catch (SQLException e) {
+		             System.out.println("Error al verificar credenciales: " + e.getMessage());
+		        }
+			
+				return ok;
+			
+			
 		}
 
 		

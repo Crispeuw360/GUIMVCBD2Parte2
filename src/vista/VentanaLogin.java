@@ -75,9 +75,9 @@ public class VentanaLogin extends JFrame implements ActionListener{
 		if (e.getSource()==btnLogin) {
 		 if (cont.comprobarUsuario(new Usuario (campoUsuario.getText(),new String(campoContrasena.getPassword())))) {
 			 lblNewLabel_1.setText("Usuario Logeado");
-			 //VentanaInsertar v=new  VentanaInsertar(this,cont);
-			 //v.setVisible(true);
-			 dispose();
+			 VentanaOpciones v=new  VentanaOpciones(cont);
+			 v.setVisible(true);
+			 
 		 }else {
 			 lblNewLabel_1.setText("Usuario no encontrado");
 		 }
