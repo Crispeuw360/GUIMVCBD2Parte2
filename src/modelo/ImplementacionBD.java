@@ -9,11 +9,6 @@ import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.TreeMap;
 
-
-
-
-
-
 public class ImplementacionBD implements UsuarioDAO{
 	// Atributos
 		private Connection con;
@@ -34,7 +29,7 @@ public class ImplementacionBD implements UsuarioDAO{
 		final String SQLCONSULTA = "SELECT * FROM USUARIO";
 		final String sql1 = "SELECT * FROM usuario WHERE usuario = ?";
 		final String SQLBORRAR = "DELETE FROM usuario WHERE usuario=?";
-		final String SQLMODIFICAR = "UPDATE usuario SET contrasena=? WHERE usuario=?";
+		final String SQLMODIFICAR = "UPDATE usuario SET usuario=?, contrasena=? WHERE usuario=?";
 
 		// Para la conexi n utilizamos un fichero de configuaraci n, config que
 		// guardamos en el paquete control:
@@ -175,7 +170,7 @@ public class ImplementacionBD implements UsuarioDAO{
 			
 			
 		}
-		public boolean actualizarUsuario(Usuario usuario) {
+		public boolean actualizarUsuario(String nombreActual,Usuario usuarioNuevo) {
 			// TODO Auto-generated method stub
 			boolean ok=false;
 			
@@ -184,8 +179,9 @@ public class ImplementacionBD implements UsuarioDAO{
 					// Preparamos la sentencia stmt con la conexion y sentencia sql correspondiente
 
 					stmt = con.prepareStatement(SQLMODIFICAR);
-					stmt.setString(2, usuario.getNombre());
-					stmt.setString(1, usuario.getContrasena());
+					stmt.setString(1, usuarioNuevo.getNombre()); // Nuevo nombre
+					stmt.setString(2, usuarioNuevo.getContrasena());
+					stmt.setString(3, nombreActual); // Nombre anterior
 					if (stmt.executeUpdate()>0) {
 						ok=true;
 					}
@@ -200,7 +196,7 @@ public class ImplementacionBD implements UsuarioDAO{
 			
 			
 		}
-		public boolean borrarUsuario(String usuario) {
+		public boolean borrarUsuario(String nombre) {
 			// TODO Auto-generated method stub
 			boolean ok=false;
 			
@@ -209,7 +205,7 @@ public class ImplementacionBD implements UsuarioDAO{
 					// Preparamos la sentencia stmt con la conexion y sentencia sql correspondiente
 
 					stmt = con.prepareStatement(SQLBORRAR);
-					stmt.setString(1, usuario);
+					stmt.setString(1, nombre);
 					if (stmt.executeUpdate()>0) {
 						ok=true;
 					}

@@ -13,6 +13,8 @@ import controlador.LoginControlador;
 import modelo.Usuario;
 
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.Font;
 import javax.swing.JComboBox;
 import javax.swing.JTextField;
@@ -76,9 +78,12 @@ public class VentanaModificar extends JDialog implements ActionListener{
 
 
 	@Override
-	public void actionPerformed(ActionEvent e) {
-		// TODO Auto-generated method stub
-		
+	public void actionPerformed(ActionEvent e) 
+	{
+		if(e.getSource()==btnModificar)
+		{
+			modificarUsuario();
+		}
 	}
 	
 	private void comboBoxActualizar(JComboBox<String> comboBoxUsuarios)
@@ -86,6 +91,33 @@ public class VentanaModificar extends JDialog implements ActionListener{
 		for(Usuario i: cont.consultaUsuarios().values())
 		{
 			comboBoxUsuarios.addItem(i.getNombre());
+		}
+	}
+	
+	private void modificarUsuario()
+	{
+		String nuevoNombre,nuevaContraseña,nombreActual;
+		
+		nombreActual = (String) comboBoxUsuarios.getSelectedItem();
+		nuevoNombre = textFieldUsuario.getText().trim();
+		nuevaContraseña = textFieldContraseña.getText().trim();
+		
+		if(nuevoNombre != null&& !nuevoNombre.isEmpty()&&!nuevaContraseña.isEmpty())
+		{
+			 Usuario usuarioNuevo = new Usuario(nuevoNombre, nuevaContraseña);
+			 
+			 if(cont.actualizarUsuario(nombreActual, usuarioNuevo))
+			 {
+				 JOptionPane.showMessageDialog(this, "Usuario modificado correctamente.");
+				 comboBoxUsuarios.removeAllItems(); // Refrescar ComboBox
+				 comboBoxActualizar(comboBoxUsuarios);
+			 }else
+			 {
+				 JOptionPane.showMessageDialog(this, "Error al modificar usuario","Error",JOptionPane.ERROR_MESSAGE);
+			 }
+		}else
+		{
+			 JOptionPane.showMessageDialog(this, "Debe completar todos los campos.", "Advertencia", JOptionPane.WARNING_MESSAGE);
 		}
 	}
 }

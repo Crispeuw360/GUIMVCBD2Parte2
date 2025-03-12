@@ -73,6 +73,10 @@ public class VentanaOpciones extends JFrame implements ActionListener {
 		{
 			VentanaModificar vM = new VentanaModificar(this,cont);
 			vM.setVisible(true);
+		}else if(e.getSource()==btnEliminar)
+		{
+			VentanaEliminar vE = new VentanaEliminar(this,cont);
+			vE.setVisible(true);
 		}
 	}
 

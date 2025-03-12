@@ -25,8 +25,12 @@ public class LoginControlador {
 	public boolean insertarUsuario(Usuario usuario) {
 		return dao.insertarUsuario(usuario);
 	}
-	public boolean actualizarUsuario(Usuario usuario) {
-		return dao.actualizarUsuario(usuario);
+	public boolean actualizarUsuario(String nombreActual, Usuario usuarioNuevo) {
+		return dao.actualizarUsuario(nombreActual,usuarioNuevo);
+	}
+	public boolean borrarUsuario(String nombre)
+	{
+		return dao.borrarUsuario(nombre);
 	}
 
 
